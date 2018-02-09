@@ -12,4 +12,10 @@ int main(){
 	for(i = 0; i < length; i++){
 		printf("%d ", array[i]);
 	}
+
+	select_sort(array, length);
+	for(i = 0; i < length; i++){
+		printf("%d ", array[i]);
+	}
+
 }
