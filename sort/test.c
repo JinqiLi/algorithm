@@ -90,70 +90,82 @@ TEST_MERGE_SORT(){
 	return;
 }
 
-TEST_SORT_SPEED(){
+TEST_SORT_SPEED(long long int num){
 	int i;
 	struct timeval  tmv1;  
     struct timeval  tmv2;  
     float tmcost; 
 
-    int array[100000] = {0};
-	for(i = 0; i < 100000; i++){
+    //int array[num] = {0};
+    int *array = (int*)malloc(sizeof(int) * num);
+	for(i = 0; i < num; i++){
 		array[i] = rand();
 	}
-	int length = sizeof(array)/sizeof(int);
+	//int length = sizeof(array)/sizeof(int);
 	
 	gettimeofday(&tmv1, NULL);  
-	bubble_sort(array, length);
+	bubble_sort(array, num);
 	gettimeofday(&tmv2, NULL);  
 	tmcost = (float)(tmv2.tv_sec*1000*1000+tmv2.tv_usec - tmv1.tv_sec*1000*1000+tmv1.tv_usec)/1000000;  
-        printf("bubble sort %d data costs %f s\n", length, tmcost); 
+        printf("bubble sort %lld data costs %f s\n", num, tmcost); 
 
-    for(i = 0; i < 100000; i++){
-		array[i] = rand();
-	}
-	
-	gettimeofday(&tmv1, NULL);  
-	insert_sort(array, length);
-	gettimeofday(&tmv2, NULL);  
-	tmcost = (float)(tmv2.tv_sec*1000*1000+tmv2.tv_usec - tmv1.tv_sec*1000*1000+tmv1.tv_usec)/1000000;  
-        printf("insert sort %d data costs %f s\n", length, tmcost); 
-
-	for(i = 0; i < 100000; i++){
+    for(i = 0; i < num; i++){
 		array[i] = rand();
 	}
 	
 	gettimeofday(&tmv1, NULL);  
-	select_sort(array, length);
+	insert_sort(array, num);
 	gettimeofday(&tmv2, NULL);  
 	tmcost = (float)(tmv2.tv_sec*1000*1000+tmv2.tv_usec - tmv1.tv_sec*1000*1000+tmv1.tv_usec)/1000000;  
-        printf("select sort %d data costs %f s\n", length, tmcost); 
+        printf("insert sort %lld data costs %f s\n", num, tmcost); 
 
-
-    for(i = 0; i < 100000; i++){
+	for(i = 0; i < num; i++){
 		array[i] = rand();
 	}
 	
 	gettimeofday(&tmv1, NULL);  
-	quick_sort(array, 0, length-1);
+	select_sort(array, num);
 	gettimeofday(&tmv2, NULL);  
 	tmcost = (float)(tmv2.tv_sec*1000*1000+tmv2.tv_usec - tmv1.tv_sec*1000*1000+tmv1.tv_usec)/1000000;  
-        printf("quick sort %d data costs %f s\n", length, tmcost); 
+        printf("select sort %lld data costs %f s\n", num, tmcost); 
 
 
-    for(i = 0; i < 100000; i++){
+    for(i = 0; i < num; i++){
 		array[i] = rand();
 	}
 	
 	gettimeofday(&tmv1, NULL);  
-	merge_sort(array, 0, length-1);
+	quick_sort(array, 0, num-1);
 	gettimeofday(&tmv2, NULL);  
 	tmcost = (float)(tmv2.tv_sec*1000*1000+tmv2.tv_usec - tmv1.tv_sec*1000*1000+tmv1.tv_usec)/1000000;  
-        printf("merge sort %d data costs %f s\n", length, tmcost); 
+        printf("quick sort %lld data costs %f s\n", num, tmcost); 
+
+
+    for(i = 0; i < num; i++){
+		array[i] = rand();
+	}
+	
+	gettimeofday(&tmv1, NULL);  
+	merge_sort(array, 0, num-1);
+	gettimeofday(&tmv2, NULL);  
+	tmcost = (float)(tmv2.tv_sec*1000*1000+tmv2.tv_usec - tmv1.tv_sec*1000*1000+tmv1.tv_usec)/1000000;  
+        printf("merge sort %lld data costs %f s\n", num, tmcost); 
     
 
 }
 
-int main(){
+int main(int argc, char* argv[]){
+	if(argc != 2){  
+	    fprintf(stderr, "%% ERROR! Usage: %s <data_num>\n", argv[0]);  
+	    return 1;  
+    }  
+
+	long long int data_num = atoll(argv[1]);
+	if(data_num <= 0){
+		fprintf(stderr, "%% ERROR! Usage: %s <data_num>\n", argv[0]);  
+	    return 1;
+	}
+
 	//测试冒泡排序
 	TEST_BUBBLE_SORT();
 
@@ -170,7 +182,7 @@ int main(){
 	TEST_MERGE_SORT();
 
 	//测试排序速度
-	TEST_SORT_SPEED();
+	TEST_SORT_SPEED(data_num);
 
 	return 0;
 }
