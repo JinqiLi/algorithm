@@ -90,6 +90,24 @@ TEST_MERGE_SORT(){
 	return;
 }
 
+TEST_HEAP_SORT(){
+	int i;
+	int array[1000] = {0};
+	for(i = 0; i < 1000; i++){
+		array[i] = rand();
+	}
+	int length = sizeof(array)/sizeof(int);
+	heap_sort(array, length);
+	for(i = 0; i < length-1; i++){
+		if(array[i] > array[i+1]){
+			printf("heap sort error!\n");
+			return;
+		}
+	}
+	printf("heap sort success!\n");
+	return;
+}
+
 TEST_SORT_SPEED(long long int num){
 	int i;
 	struct timeval  tmv1;  
@@ -152,6 +170,16 @@ TEST_SORT_SPEED(long long int num){
         printf("merge sort %lld data costs %f s\n", num, tmcost); 
     
 
+    for(i = 0; i < num; i++){
+		array[i] = rand();
+	}
+	
+	gettimeofday(&tmv1, NULL);  
+	heap_sort(array, num);
+	gettimeofday(&tmv2, NULL);  
+	tmcost = (float)(tmv2.tv_sec*1000*1000+tmv2.tv_usec - tmv1.tv_sec*1000*1000+tmv1.tv_usec)/1000000;  
+        printf("heap sort %lld data costs %f s\n", num, tmcost); 
+
 }
 
 int main(int argc, char* argv[]){
@@ -180,6 +208,9 @@ int main(int argc, char* argv[]){
 
 	//测试归并排序
 	TEST_MERGE_SORT();
+
+	//测试堆排序
+	TEST_HEAP_SORT();
 
 	//测试排序速度
 	TEST_SORT_SPEED(data_num);
